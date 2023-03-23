@@ -397,9 +397,12 @@ public class LanguageServerWrapper {
                 .equals(Integer.toString(ResponseErrorCode.RequestCancelled.getValue()))) {
             ResponseMessage responseMessage = (ResponseMessage) message;
             LOGGER.warn("", new ResponseErrorException(responseMessage.getError()));
-        } else if (LOGGER.isDebugEnabled()) {
-            LOGGER.info(message.getClass().getSimpleName() + '\n' + message.toString());
+        } else {
+            LOGGER.warn(message.getClass().getSimpleName() + '\n' + message.toString());
         }
+//        else if (LOGGER.isDebugEnabled()) {
+//            LOGGER.info(message.getClass().getSimpleName() + '\n' + message.toString());
+//        }
     }
 
     /**

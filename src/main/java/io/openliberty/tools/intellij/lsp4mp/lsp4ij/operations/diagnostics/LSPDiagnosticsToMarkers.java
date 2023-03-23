@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -28,39 +29,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class LSPDiagnosticsToMarkers implements Consumer<PublishDiagnosticsParams> {
+// public class LSPDiagnosticsToMarkers implements Consumer<PublishDiagnosticsParams> {
+public class LSPDiagnosticsToMarkers {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LSPDiagnosticsToMarkers.class);
 
     private static final Key<Map<String, RangeHighlighter[]>> LSP_MARKER_KEY_PREFIX = Key.create(LSPDiagnosticsToMarkers.class.getName() + ".markers");
 
-    private final String languageServerId;
+    // private final static String languageServerId;
 
-    public LSPDiagnosticsToMarkers(@Nonnull String serverId) {
-        this.languageServerId = serverId;
-    }
-    @Override
-    public void accept(PublishDiagnosticsParams publishDiagnosticsParams) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            VirtualFile file = null;
-            try {
-                file = LSPIJUtils.findResourceFor(new URI(publishDiagnosticsParams.getUri()));
-            } catch (URISyntaxException e) {
-                LOGGER.warn(e.getLocalizedMessage(), e);
-            }
-            if (file != null) {
-                Document document = FileDocumentManager.getInstance().getDocument(file);
-                if (document != null) {
-                    Editor[] editors  = LSPIJUtils.editorsForFile(file, document);
-                    for(Editor editor : editors) {
-                        cleanMarkers(editor);
-                        createMarkers(editor, document, publishDiagnosticsParams.getDiagnostics());
-                    }
-                }
-            }
-        });
-    }
+    // public LSPDiagnosticsToMarkers(@Nonnull String serverId) {
+    //     this.languageServerId = serverId;
+    // }
 
-    private void createMarkers(Editor editor, Document document, List<Diagnostic> diagnostics) {
+    // public void accept(PublishDiagnosticsParams publishDiagnosticsParams) {
+    //     ProgressManager.getInstance().executeNonCancelableSection(() -> {
+    //         VirtualFile file = null;
+    //         try {
+    //             file = LSPIJUtils.findResourceFor(new URI(publishDiagnosticsParams.getUri()));
+    //         } catch (URISyntaxException e) {
+    //             LOGGER.warn(e.getLocalizedMessage(), e);
+    //         }
+    //         if (file != null) {
+    //             Document document = FileDocumentManager.getInstance().getDocument(file);
+    //             if (document != null) {
+    //                 Editor[] editors  = LSPIJUtils.editorsForFile(file, document);
+    //                 for(Editor editor : editors) {
+    //                     cleanMarkers(editor);
+    //                     createMarkers(editor, document, publishDiagnosticsParams.getDiagnostics());
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
+
+    public static void createMarkers(Editor editor, Document document, List<Diagnostic> diagnostics, String languageServerId) {
         RangeHighlighter[] rangeHighlighters = new RangeHighlighter[diagnostics.size()];
         int index = 0;
         for(Diagnostic diagnostic : diagnostics) {
@@ -80,14 +83,16 @@ public class LSPDiagnosticsToMarkers implements Consumer<PublishDiagnosticsParam
         }
         Map<String, RangeHighlighter[]> allMarkers = getAllMarkers(editor);
         allMarkers.put(languageServerId, rangeHighlighters);
+        System.out.println("End of createMarkers");
+
         // forces re-highlighting/refreshes inspections for the current file to fix https://github.com/OpenLiberty/liberty-tools-intellij/issues/85
         // triggers io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.diagnostics.LSPLocalInspectionTool#checkFile()
-        Project project = editor.getProject();
-        DaemonCodeAnalyzer.getInstance(project).restart(PsiManager.getInstance(project).findFile(FileDocumentManager.getInstance().getFile(document)));
+//        Project project = editor.getProject();
+//        DaemonCodeAnalyzer.getInstance(project).restart(PsiManager.getInstance(project).findFile(FileDocumentManager.getInstance().getFile(document)));
     }
 
     @NotNull
-    private Map<String, RangeHighlighter[]> getAllMarkers(Editor editor) {
+    private static Map<String, RangeHighlighter[]> getAllMarkers(Editor editor) {
         if (editor instanceof UserDataHolderBase) {
             return ((UserDataHolderBase) editor).putUserDataIfAbsent(LSP_MARKER_KEY_PREFIX, new HashMap<>());
         } else {
@@ -102,16 +107,16 @@ public class LSPDiagnosticsToMarkers implements Consumer<PublishDiagnosticsParam
         }
     }
 
-    private EffectType getEffectType(DiagnosticSeverity severity) {
+    private static EffectType getEffectType(DiagnosticSeverity severity) {
         return severity== DiagnosticSeverity.Hint?EffectType.BOLD_DOTTED_LINE:EffectType.WAVE_UNDERSCORE;
     }
 
-    private int getLayer(DiagnosticSeverity severity) {
+    private static int getLayer(DiagnosticSeverity severity) {
         return severity== DiagnosticSeverity.Error?HighlighterLayer.ERROR:HighlighterLayer.WARNING;
     }
 
     // Controls the underline colour of the diagnostic
-    private Color getColor(DiagnosticSeverity severity) {
+    private static Color getColor(DiagnosticSeverity severity) {
         if (severity == null) {
             // if not set, default to Error
             return Color.RED;
@@ -130,7 +135,7 @@ public class LSPDiagnosticsToMarkers implements Consumer<PublishDiagnosticsParam
         return Color.GRAY;
     }
 
-    private void cleanMarkers(Editor editor) {
+    public static void cleanMarkers(Editor editor, String languageServerId) {
         Map<String, RangeHighlighter[]> allMarkers = getAllMarkers(editor);
         RangeHighlighter[] highlighters = allMarkers.get(languageServerId);
         MarkupModel markupModel = editor.getMarkupModel();

@@ -3,6 +3,8 @@ package io.openliberty.tools.intellij.lsp4mp.lsp4ij;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+
+import io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.codeactions.LSPCodeActionAnnotator;
 import io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.diagnostics.LSPDiagnosticsToMarkers;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
@@ -22,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class LanguageClientImpl implements LanguageClient {
     private final Project project;
-    private LSPDiagnosticsToMarkers diagnosticHandler;
+    private LSPCodeActionAnnotator diagnosticHandler;
 
     private LanguageServer server;
     private LanguageServerWrapper wrapper;
@@ -38,7 +40,7 @@ public class LanguageClientImpl implements LanguageClient {
     public final void connect(LanguageServer server, LanguageServerWrapper wrapper) {
         this.server = server;
         this.wrapper = wrapper;
-        this.diagnosticHandler = new LSPDiagnosticsToMarkers(wrapper.serverDefinition.id);
+        this.diagnosticHandler = new LSPCodeActionAnnotator();
     }
 
     protected final LanguageServer getLanguageServer() {

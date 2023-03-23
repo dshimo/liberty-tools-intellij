@@ -69,19 +69,19 @@
                 implementation="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.navigation.LSPGotoDeclarationHandler"/> -->
 
         <!-- Hover for LemMinX + Liberty LemMinX ext -->
-        <lang.documentationProvider id="LSPTextHoverXML" language="XML"
-                                    implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.hover.LSPTextHover"
-                                    order="first"/>
+<!--        <lang.documentationProvider id="LSPTextHoverXML" language="XML"-->
+<!--                                    implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.hover.LSPTextHover"-->
+<!--                                    order="first"/>-->
         <!-- Hover for Liberty Config LS bootstrap.properties and LSP4MP microprofile-config.properties -->
-        <lang.documentationProvider id="LSPTextHoverProperties" language="Properties"
-                                    implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.hover.LSPTextHover"
-                                    order="first"/>
+<!--        <lang.documentationProvider id="LSPTextHoverProperties" language="Properties"-->
+<!--                                    implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.hover.LSPTextHover"-->
+<!--                                    order="first"/>-->
         <!-- Hover for Java files, LSP4MP and LSP4Jakarta -->
-        <lang.documentationProvider id="LSPTextHoverJAVA" language="JAVA"
-                                    implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.hover.LSPTextHover"
-                                    order="first"/>
-        <codeInsight.inlayProvider language="JAVA"
-                                   implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.codelens.LSPInlayProvider"/>
+<!--        <lang.documentationProvider id="LSPTextHoverJAVA" language="JAVA"-->
+<!--                                    implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.hover.LSPTextHover"-->
+<!--                                    order="first"/>-->
+<!--        <codeInsight.inlayProvider language="JAVA"-->
+<!--                                   implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.codelens.LSPInlayProvider"/>-->
         <externalAnnotator language="XML" implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.codeactions.LSPCodeActionAnnotator"/>
         <externalAnnotator language="TEXT" implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.codeactions.LSPCodeActionAnnotator"/>
         <externalAnnotator language="Properties" implementationClass="io.openliberty.tools.intellij.lsp4mp.lsp4ij.operations.codeactions.LSPCodeActionAnnotator"/>

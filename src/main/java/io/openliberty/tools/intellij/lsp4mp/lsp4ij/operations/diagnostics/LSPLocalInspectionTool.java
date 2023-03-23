@@ -61,7 +61,7 @@ public class LSPLocalInspectionTool extends LocalInspectionTool implements Exter
     }
 
     @Nullable
-    @Override
+//    @Override
     public ProblemDescriptor[] checkFile(@NotNull PsiFile file, @NotNull InspectionManager manager, boolean isOnTheFly) {
         VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile != null) {
