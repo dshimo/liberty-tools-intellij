@@ -16,54 +16,51 @@ import java.nio.file.Paths;
 
 import javax.swing.Icon;
 
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import io.openliberty.tools.intellij.LibertyPluginIcons;
-
-import static io.openliberty.tools.intellij.util.Constants.SERVER_ENV_GLOB_PATTERN;
+import static io.openliberty.tools.intellij.util.Constants.BOOTSTRAP_GLOB_PATTERN;;
 
 /**
- * Custom file type for server.env files
+ * Custom file type for bootstrap.properties files
  */
-public class ServerEnvFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
-    public static final ServerEnvFileType INSTANCE = new ServerEnvFileType();
+public class BootstrapPropertiesFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
+    public static final BootstrapPropertiesFileType INSTANCE = new BootstrapPropertiesFileType();
 
-
-    private ServerEnvFileType() {
-        super(PlainTextLanguage.INSTANCE);
+    private BootstrapPropertiesFileType() {
+        super(BootstrapPropertiesLanguage.INSTANCE);
     }
 
     @Override
     public boolean isMyFileType(@NotNull VirtualFile file) {
-        Path path = Paths.get(file.getPath());
-        final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + SERVER_ENV_GLOB_PATTERN);
+        Path path = Paths.get(file.getCanonicalPath());
+        final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + BOOTSTRAP_GLOB_PATTERN);
         return matcher.matches(path);
     }
 
     @Override
     public @NotNull String getName() {
-        return "server.env";
+        return "bootstrap.properties";
     }
 
     @Override
     public @NotNull @NlsContexts.Label String getDescription() {
-        return "server.env";
+        return "bootstrap.properties";
     }
 
     @Override
     public @NotNull String getDefaultExtension() {
-        return "env";
+        return "properties";
     }
 
     @Override
     public @Nullable Icon getIcon() {
-        return LibertyPluginIcons.libertyIcon;
+        return AllIcons.FileTypes.Properties;
     }
 }
