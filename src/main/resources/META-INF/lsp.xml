@@ -36,8 +36,12 @@
         <server id="libertyls" class="io.openliberty.tools.intellij.liberty.lsp.LibertyConfigLanguageServer"
                 clientImpl="io.openliberty.tools.intellij.liberty.lsp.LibertyConfigLanguageClient"
                 serverInterface="org.eclipse.lsp4mp.ls.api.MicroProfileLanguageServerAPI"/>
+        <languageMapping language="BootstrapProperties" serverId="libertyls"/>
         <languageMapping language="Properties" serverId="libertyls"
-                         filePattern="**/{src/main/liberty/config,usr/servers/**}/{bootstrap.properties,server.env}"/>
+                        filePattern="**/{src/main/liberty/config,usr/servers/**}/bootstrap.properties"/>
+        <!-- <languageMapping language="ServerEnv" serverId="libertyls"/> -->
+        <languageMapping language="Properties" serverId="libertyls"
+                        filePattern="**/{src/main/liberty/config,usr/servers/**}/{server.env}"/>
 
         <!-- Jakarta LS -->
         <server id="jakartals" class="io.openliberty.tools.intellij.lsp4jakarta.lsp.JakartaLanguageServer"
@@ -54,6 +58,8 @@
         <!-- Suppress certain Properties language inspections on server.env files -->
         <lang.inspectionSuppressor language="Properties"
                                    implementationClass="io.openliberty.tools.intellij.liberty.lsp.ServerEnvInspectionSuppressor"/>
+        <fileType name="bootstrap.properties" language="BootstrapProperties"
+                  implementationClass="io.openliberty.tools.intellij.liberty.lsp.BootstrapPropertiesFileType"/>
 
         <!-- Completion support for all language servers -->
         <completion.contributor id="LSPCompletionContributor" language="any"
